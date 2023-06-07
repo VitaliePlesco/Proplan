@@ -1,6 +1,7 @@
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
-import { useRef, useState, useEffect } from "react";
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
+
+import { useRef, useState, useEffect } from "react";
 import EditTaskDialog from "./EditTaskDialog";
 
 function TaskSettingsMenu({ taskId }) {

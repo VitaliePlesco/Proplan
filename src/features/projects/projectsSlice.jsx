@@ -12,7 +12,7 @@ const initialState = [
         id: 0,
         title: "Clean the windows",
         description: "Get a cloth spray on it some cleaning liquid. Wipe",
-        status: "todo",
+        status: "to do",
       },
       {
         id: 1,
@@ -25,7 +25,7 @@ const initialState = [
         id: 2,
         title: "Clean the room",
         description: "Get a cloth spray on it some cleaning liquid. Wipe",
-        status: "todo",
+        status: "to do",
       },
       {
         id: 3,

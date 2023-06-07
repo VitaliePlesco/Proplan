@@ -4,7 +4,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import { useParams } from "react-router-dom";
 import { todoAdded } from "../projects/projectsSlice";
 
-function AddTask({ setIsActive }) {
+function AddTask({ setIsActive, status }) {
   const [task, setTask] = useState("");
   const addTaskRef = useRef();
 
@@ -31,7 +31,7 @@ function AddTask({ setIsActive }) {
         projectId,
         id: nanoid(),
         title: task,
-        status: "todo",
+        status: status,
       })
     );
 

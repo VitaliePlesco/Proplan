@@ -13,6 +13,7 @@ function EditTaskDialog({ dialogRef, taskId }) {
   );
 
   const task = project.todos.find((task) => task.id === taskId);
+  // console.log(task, "editDialog");
 
   const handleCloseEdit = () => {
     dialogRef.current.close();
@@ -47,12 +48,12 @@ function EditTaskDialog({ dialogRef, taskId }) {
         </header>
         <div className="flex mt-4  gap-16 min-w-full ">
           <div className="flex flex-col justify-between  items-start gap-2 min-w-[60%]">
-            <TaskSummary task={task} />
+            <TaskSummary {...task} />
 
             <Editor />
           </div>
 
-          <TaskStatus taskId={task.id} />
+          <TaskStatus task={task} />
         </div>
       </div>
     </dialog>

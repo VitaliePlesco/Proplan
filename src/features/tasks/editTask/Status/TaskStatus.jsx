@@ -20,7 +20,7 @@ const statusOptions = [
   },
 ];
 
-function TaskStatus({ taskId }) {
+function TaskStatus({ task }) {
   const [btnState, setBtnState] = useState(statusOptions[0]);
   const [isOpen, setIsOpen] = useState(false);
 
