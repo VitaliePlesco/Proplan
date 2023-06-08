@@ -3,16 +3,16 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function TaskSummary({ id, title }) {
-  // const { projectId } = useParams();
-  // const project = useSelector((state) =>
-  //   state.projects.find((project) => project.id == projectId)
-  // );
+  const { projectId } = useParams();
+  const project = useSelector((state) =>
+    state.projects.find((project) => project.id == projectId)
+  );
 
   // const task = project.todos.find((task) => task.id === taskId);
   // const { id, title } = todo;
 
   // console.log(title, id, "tasksummary");
-  console.log(id, title);
+  console.log(project);
 
   const [summary, setSummary] = useState(title);
   const [isEditMode, setIsEditMode] = useState(false);

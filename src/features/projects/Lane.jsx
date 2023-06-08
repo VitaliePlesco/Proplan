@@ -11,7 +11,11 @@ function Lane({ laneId, status, tasks }) {
       <p className="mb-3 w-full border-b-2 text-gray-500 uppercase">{status}</p>
       <div className="flex flex-col gap-2">
         {tasks.map((task) => (
-          <TaskPreview key={task.id} taskId={task.id} title={task.status} />
+          <TaskPreview
+            key={task.id}
+            taskId={task.id}
+            taskSummary={task.title}
+          />
         ))}
       </div>
       {isActive ? (

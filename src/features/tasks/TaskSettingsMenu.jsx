@@ -74,6 +74,7 @@ function TaskSettingsMenu({ taskId }) {
           >
             Delete
           </button>
+          {console.log("dropdown")}
         </div>
       ) : null}
       <dialog ref={dialogRef}>

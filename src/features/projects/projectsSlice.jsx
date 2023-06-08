@@ -90,6 +90,9 @@ const projectsSlice = createSlice({
         });
       }
     },
+    todoUpdated(state, action) {
+      const { projectId, id, title } = action.payload;
+    },
   },
 });
 
