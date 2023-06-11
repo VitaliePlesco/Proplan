@@ -13,11 +13,8 @@ function TaskSettingsMenu({ taskId }) {
   const editDialogRef = useRef();
 
   const handleShowMenu = () => {
-    if (!isOpen) {
-      setIsOpen(true);
-    } else {
-      setIsOpen(false);
-    }
+    setIsOpen(!isOpen);
+    setShowDialog(true);
   };
 
   useEffect(() => {
@@ -74,7 +71,6 @@ function TaskSettingsMenu({ taskId }) {
           >
             Delete
           </button>
-          {console.log("dropdown")}
         </div>
       ) : null}
       <dialog ref={dialogRef}>
@@ -101,12 +97,14 @@ function TaskSettingsMenu({ taskId }) {
         </div>
       </dialog>
 
-      <EditTaskDialog
-        taskId={taskId}
-        dialogRef={editDialogRef}
-        open={showDialog}
-        setOpen={setShowDialog}
-      />
+      {showDialog && (
+        <EditTaskDialog
+          taskId={taskId}
+          dialogRef={editDialogRef}
+          open={showDialog}
+          setOpen={setShowDialog}
+        />
+      )}
     </div>
   );
 }

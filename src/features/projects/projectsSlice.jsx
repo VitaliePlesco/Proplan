@@ -1,5 +1,6 @@
 import { sub } from "date-fns";
 import { createSlice } from "@reduxjs/toolkit";
+import { current } from "@reduxjs/toolkit";
 
 const initialState = [
   {
@@ -18,7 +19,8 @@ const initialState = [
         id: 1,
         title:
           "Windows the clean. Get a cloth spray on it some cleaning liquid. Wipe",
-        description: "Get a cloth spray on it some cleaning liquid. Wipe",
+        description:
+          "Get a cloth spray on it some cleaning liquid. Wipe Wipe Wipe",
         status: "done",
       },
       {
@@ -80,9 +82,8 @@ const projectsSlice = createSlice({
       const { projectId, id, title, status } = action.payload;
 
       const existingProject = state.find((project) => project.id == projectId);
-      console.log(existingProject);
+      console.log(existingProject, "added");
       if (existingProject) {
-        console.log(action.payload);
         existingProject.todos.push({
           id,
           title,
@@ -90,14 +91,31 @@ const projectsSlice = createSlice({
         });
       }
     },
-    todoUpdated(state, action) {
-      const { projectId, id, title } = action.payload;
+    todoStatusUpdated(state, action) {
+      const { projectId, id, status } = action.payload;
+      const project = state.find((project) => project.id == projectId);
+      const todo = project.todos.find((todo) => todo.id === id);
+      todo.status = status;
+      console.log(current(state), "slice");
+    },
+    todoSummaryUpdated(state, action) {
+      const { projectId, id, summary } = action.payload;
+      const project = state.find((project) => project.id == projectId);
+      const todo = project.todos.find((todo) => todo.id === id);
+      todo.title = summary;
+      console.log(current(state), "slice");
     },
   },
 });
 
-export const { projectAdded, projectUpdated, projectDeleted, todoAdded } =
-  projectsSlice.actions;
+export const {
+  projectAdded,
+  projectUpdated,
+  projectDeleted,
+  todoAdded,
+  todoStatusUpdated,
+  todoSummaryUpdated,
+} = projectsSlice.actions;
 
 export const selectProjectById = (state, projectId) => {
   state.projects.find((project) => project.id === projectId);

@@ -3,8 +3,8 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "./editor.css";
 
-function Editor() {
-  const [value, setValue] = useState("");
+function Editor({ description }) {
+  const [value, setValue] = useState(description);
 
   let toolbarOptions = [
     ["bold", "italic", "underline", "strike"], // toggled buttons

@@ -47,13 +47,17 @@ function EditTaskDialog({ dialogRef, taskId }) {
           </div>
         </header>
         <div className="flex mt-4  gap-16 min-w-full ">
-          <div className="flex flex-col justify-between  items-start gap-2 min-w-[60%]">
-            <TaskSummary {...task} />
+          <div className="flex flex-col justify-between  items-start gap-2 max-w-[70%]">
+            <TaskSummary taskId={task.id} title={task.title} />
 
-            <Editor />
+            <Editor description={task.description} />
           </div>
 
-          <TaskStatus task={task} />
+          <TaskStatus
+            projectId={projectId}
+            taskId={task.id}
+            taskStatus={task.status}
+          />
         </div>
       </div>
     </dialog>

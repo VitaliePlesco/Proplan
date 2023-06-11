@@ -25,10 +25,10 @@ function EditProjectForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onTitleChanged = (e) => setTitle(e.target.value);
-  const onTypeChanged = (e) => setProjectType(e.target.value);
+  const handleTitleChange = (e) => setTitle(e.target.value);
+  const handleTypeChange = (e) => setProjectType(e.target.value);
 
-  const onEditProjectClicked = (e) => {
+  const hanleEditProject = (e) => {
     e.preventDefault();
     if (title && type) {
       dispatch(
@@ -42,7 +42,7 @@ function EditProjectForm() {
     navigate(`/projects/${project.id}`);
   };
 
-  const onDeleteProjectClicked = () => {
+  const handleDeleteProject = () => {
     dispatch(
       projectDeleted({
         id: projectId,
@@ -66,7 +66,7 @@ function EditProjectForm() {
     <div className="flex flex-col m-auto justify-center items-center w-1/4 pt-16">
       <div className="flex justify-between w-full items-center">
         <h1>Edit Project</h1>
-        <ProjectSettingsMenu onDeleteProjectClicked={onDeleteProjectClicked} />
+        <ProjectSettingsMenu onDeleteProjectClicked={handleDeleteProject} />
       </div>
       <div className=" mt-24 w-full">
         <form>
@@ -83,7 +83,7 @@ function EditProjectForm() {
               id="projectName"
               value={title}
               maxLength="21"
-              onChange={onTitleChanged}
+              onChange={handleTitleChange}
               className="w-full rounded-md border border-gray-300 py-2 px-2 text-gray-900 shadow-sm  placeholder:text-gray-400  focus:outline-[#4b50d6] hover:border-[#8b8eee]"
             />
           </div>
@@ -98,7 +98,7 @@ function EditProjectForm() {
               id="projectType"
               value={type}
               className="w-full rounded-md border border-gray-300 py-2 px-2 text-gray-900 shadow-sm  placeholder:text-gray-400  focus:outline-[#4b50d6] hover:border-[#8b8eee]"
-              onChange={onTypeChanged}
+              onChange={handleTypeChange}
             >
               <option value=""></option>
               {projectTypes.map((option) => (
@@ -110,7 +110,7 @@ function EditProjectForm() {
           </div>
 
           <button
-            onClick={onEditProjectClicked}
+            onClick={hanleEditProject}
             className="rounded-md bg-[#4b50d6] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#6b70f0] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-2"
           >
             Save Project
