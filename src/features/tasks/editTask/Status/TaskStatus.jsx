@@ -26,8 +26,6 @@ function TaskStatus({ projectId, taskId, taskStatus }) {
   const [status, setStatus] = useState(taskStatus);
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log(status, "status");
-
   const dispatch = useDispatch();
 
   const displayBtn = statusOptions.find((btn) => btn.name === status);
@@ -65,7 +63,7 @@ function TaskStatus({ projectId, taskId, taskStatus }) {
 
   return (
     <div className="relative flex flex-col items-start  ">
-      <p className="text-lg pb-2">Status</p>
+      <small className="text-lg pb-2 text-gray-500">Status</small>
       <button onClick={handleShowMenu} className={displayBtn.style}>
         {status}
         {isOpen ? (
@@ -78,17 +76,17 @@ function TaskStatus({ projectId, taskId, taskStatus }) {
       {isOpen && (
         <div className="absolute left-0 top-20 min-w-full border rounded bg-white shadow">
           <div>
-            {filteredStatusOptions.map((button) => (
+            {filteredStatusOptions.map((option) => (
               <button
-                key={button.name}
+                key={option.name}
                 onClick={() => {
-                  setStatus(button.name);
+                  setStatus(option.name);
                   handleStatusChange();
                   handleShowMenu();
                 }}
                 className="my-2 py-1 px-4 font-normal  min-w-full hover:bg-gray-100 text-left"
               >
-                {button.name}
+                {option.name}
               </button>
             ))}
           </div>

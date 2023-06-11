@@ -96,14 +96,24 @@ const projectsSlice = createSlice({
       const project = state.find((project) => project.id == projectId);
       const todo = project.todos.find((todo) => todo.id === id);
       todo.status = status;
-      console.log(current(state), "slice");
     },
     todoSummaryUpdated(state, action) {
       const { projectId, id, summary } = action.payload;
       const project = state.find((project) => project.id == projectId);
       const todo = project.todos.find((todo) => todo.id === id);
       todo.title = summary;
-      console.log(current(state), "slice");
+    },
+    todoDescriptionUpdated(state, action) {
+      const { projectId, id, value } = action.payload;
+      const project = state.find((project) => project.id == projectId);
+      const todo = project.todos.find((todo) => todo.id === id);
+      todo.description = value;
+    },
+    todoDeleted(state, action) {
+      const { projectId, id } = action.payload;
+      const project = state.find((project) => project.id == projectId);
+      const todos = project.todos.filter((todo) => todo.id !== id);
+      project.todos = todos;
     },
   },
 });
@@ -115,6 +125,8 @@ export const {
   todoAdded,
   todoStatusUpdated,
   todoSummaryUpdated,
+  todoDescriptionUpdated,
+  todoDeleted,
 } = projectsSlice.actions;
 
 export const selectProjectById = (state, projectId) => {

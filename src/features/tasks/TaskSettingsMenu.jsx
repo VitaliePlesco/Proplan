@@ -1,12 +1,16 @@
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import { useDispatch } from "react-redux";
+import { todoDeleted } from "../projects/projectsSlice";
 
 import { useRef, useState, useEffect } from "react";
 import EditTaskDialog from "./EditTaskDialog";
 
-function TaskSettingsMenu({ taskId }) {
+function TaskSettingsMenu({ projectId, taskId }) {
   const [isOpen, setIsOpen] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
+
+  const dispatch = useDispatch();
 
   const dropdownRef = useRef();
   const dialogRef = useRef();
@@ -15,6 +19,15 @@ function TaskSettingsMenu({ taskId }) {
   const handleShowMenu = () => {
     setIsOpen(!isOpen);
     setShowDialog(true);
+  };
+
+  const handleDeleteTask = () => {
+    dispatch(
+      todoDeleted({
+        projectId,
+        id: taskId,
+      })
+    );
   };
 
   useEffect(() => {
@@ -30,7 +43,7 @@ function TaskSettingsMenu({ taskId }) {
     };
   }, [dropdownRef]);
 
-  const handleDelete = () => {
+  const handleConfirmDelete = () => {
     dialogRef.current.showModal();
     setIsOpen(false);
   };
@@ -66,7 +79,7 @@ function TaskSettingsMenu({ taskId }) {
             Edit
           </button>
           <button
-            onClick={handleDelete}
+            onClick={handleConfirmDelete}
             className="my-2 py-1 px-4 font-normal  min-w-full hover:bg-gray-100 text-left"
           >
             Delete
@@ -88,7 +101,7 @@ function TaskSettingsMenu({ taskId }) {
               Cancel
             </button>
             <button
-              //   onClick={onDeleteProjectClicked}
+              onClick={handleDeleteTask}
               className="px-3 py-1 bg-red-500 hover:bg-red-400 rounded text-white"
             >
               Delete

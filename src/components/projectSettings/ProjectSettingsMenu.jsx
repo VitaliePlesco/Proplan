@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
@@ -9,19 +8,13 @@ function ProjectSettingsMenu({ onDeleteProjectClicked }) {
   const dialogRef = useRef();
   const dropdownRef = useRef();
   function handleShowMenu() {
-    // if (!isOpen) {
-    //   setIsOpen(true);
-    // } else {
-    //   setIsOpen(false);
-    // }
     setIsOpen(!isOpen);
   }
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!dropdownRef.current.contains(event.target)) {
-        // setIsOpen(false);
-        handleShowMenu();
+        setIsOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);

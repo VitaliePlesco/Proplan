@@ -3,7 +3,7 @@ import TaskPreview from "../tasks/TaskPreview";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import AddTask from "../tasks/AddTask";
 
-function Lane({ laneId, status, tasks }) {
+function Lane({ projectId, status, tasks }) {
   const [isActive, setIsActive] = useState(false);
   //
   return (
@@ -13,6 +13,7 @@ function Lane({ laneId, status, tasks }) {
         {tasks.map((task) => (
           <TaskPreview
             key={task.id}
+            projectId={projectId}
             taskId={task.id}
             taskSummary={task.title}
           />

@@ -2,7 +2,6 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import SidebarNav from "../../components/sidebar/SidebarNav";
 
-import { useState } from "react";
 import Lane from "./Lane";
 
 const lanes = [
@@ -13,7 +12,6 @@ const lanes = [
 
 function ProjectBoard() {
   const { projectId } = useParams();
-  const [isActive, setIsActive] = useState(false);
 
   const project = useSelector((state) =>
     state.projects.find((project) => project.id == projectId)
@@ -31,6 +29,7 @@ function ProjectBoard() {
             key={lane.id}
             laneId={lane.id}
             status={lane.status}
+            projectId={project.id}
             tasks={tasks.filter((task) => task.status === lane.status)}
           />
         ))}
