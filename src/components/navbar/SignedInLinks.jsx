@@ -1,6 +1,6 @@
 import UserMenu from "../usermenu/UserMenu";
 import { useState, useRef, useEffect } from "react";
-import { auth } from "../../features/auth/firebase";
+import { auth } from "../../features/auth/firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
 
 function SignedInLinks() {

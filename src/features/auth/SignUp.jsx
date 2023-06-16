@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signupSchema } from "./validateSchema";
 import { useFormik } from "formik";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./firebase";
+import { auth } from "./firebase-config";
 import googleSvg from "../../assets/img/google.svg";
 import facebookSvg from "../../assets/img/facebook.svg";
 

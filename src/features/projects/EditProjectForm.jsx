@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { projectUpdated, projectDeleted } from "./projectsSlice";
+import { updateProject, deleteProject } from "./projectsSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import ProjectSettingsMenu from "../../components/projectSettings/ProjectSettingsMenu";
 import { toast } from "react-toastify";
@@ -15,7 +15,7 @@ const projectTypes = [
 function EditProjectForm() {
   const { projectId } = useParams();
   const project = useSelector((state) =>
-    state.projects.find((project) => project.id == projectId)
+    state.projects.projects.find((project) => project.id == projectId)
   );
 
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +32,7 @@ function EditProjectForm() {
     e.preventDefault();
     if (title && type) {
       dispatch(
-        projectUpdated({
+        updateProject({
           id: projectId,
           title,
           type,
@@ -43,24 +43,12 @@ function EditProjectForm() {
   };
 
   const handleDeleteProject = () => {
-    dispatch(
-      projectDeleted({
-        id: projectId,
-      })
-    );
+    dispatch(deleteProject(project));
     setTitle("");
     setProjectType("");
     toast.success("Project successfully moved to trash");
     navigate("/projects");
   };
-
-  function handleClick() {
-    if (!isOpen) {
-      setIsOpen(true);
-    } else {
-      setIsOpen(false);
-    }
-  }
 
   return (
     <div className="flex flex-col m-auto justify-center items-center w-1/4 pt-16">

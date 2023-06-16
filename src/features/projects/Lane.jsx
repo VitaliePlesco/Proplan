@@ -12,10 +12,10 @@ function Lane({ projectId, status, tasks }) {
       <div className="flex flex-col gap-2">
         {tasks.map((task) => (
           <TaskPreview
-            key={task.id}
+            key={`${task.summary}_${task.id}`}
             projectId={projectId}
             taskId={task.id}
-            taskSummary={task.title}
+            taskSummary={task.summary}
           />
         ))}
       </div>

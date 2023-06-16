@@ -7,7 +7,7 @@ import {
 
 function SidebarNav({ projectId }) {
   const project = useSelector((state) =>
-    state.projects.find((project) => project.id == projectId)
+    state.projects.projects.find((project) => project.id == projectId)
   );
 
   return (

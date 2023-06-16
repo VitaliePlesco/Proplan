@@ -12,7 +12,7 @@ function EditTaskDialog({ dialogRef, taskId }) {
 
   const { projectId } = useParams();
   const project = useSelector((state) =>
-    state.projects.find((project) => project.id == projectId)
+    state.projects.projects.find((project) => project.id == projectId)
   );
   const task = project.todos.find((task) => task.id === taskId);
 

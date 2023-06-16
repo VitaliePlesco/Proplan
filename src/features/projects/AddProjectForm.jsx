@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { projectAdded } from "./projectsSlice";
+import { addNewProject, setNewProject } from "./projectsSlice";
 import { useNavigate } from "react-router-dom";
 import { nanoid } from "@reduxjs/toolkit";
 
@@ -14,6 +14,7 @@ const projectTypes = [
 function AddProjectForm() {
   const [title, setTitle] = useState("");
   const [type, setProjectType] = useState("");
+  const [addRequestStatus, setAddRequestStatus] = useState("idle");
   console.log(title, type);
 
   const dispatch = useDispatch();
@@ -22,21 +23,23 @@ function AddProjectForm() {
   const onTitleChanged = (e) => setTitle(e.target.value);
   const onTypeChanged = (e) => setProjectType(e.target.value);
 
+  const canSave = [title, type].every(Boolean) && addRequestStatus === "idle";
+
   const onCreateProjectClicked = (e) => {
     e.preventDefault();
-    if (title && type) {
-      dispatch(
-        projectAdded({
-          id: nanoid(),
-          title,
-          type,
-          todos: [],
-        })
-      );
-      setTitle("");
-      setProjectType("");
+    if (canSave) {
+      try {
+        setAddRequestStatus("pending");
+        dispatch(setNewProject({ id: nanoid(), title, type, todos: [] }));
+        setTitle("");
+        setProjectType("");
+      } catch (error) {
+        console.error("Failed to save the project: ", error);
+      } finally {
+        setAddRequestStatus("idle");
+      }
+      navigate("/projects");
     }
-    navigate("/projects");
   };
   return (
     <div className="flex flex-col m-auto justify-center  w-1/4 pt-16">

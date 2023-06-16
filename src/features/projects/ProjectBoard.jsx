@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import { selectAllProjects } from "./projectsSlice";
 import { useParams } from "react-router-dom";
 import SidebarNav from "../../components/sidebar/SidebarNav";
 
@@ -12,11 +13,13 @@ const lanes = [
 
 function ProjectBoard() {
   const { projectId } = useParams();
+  const projects = useSelector(selectAllProjects);
 
   const project = useSelector((state) =>
-    state.projects.find((project) => project.id == projectId)
+    state.projects.projects.find((project) => project.id == projectId)
   );
 
+  console.log(project.todos);
   const tasks = project.todos;
 
   return (
@@ -26,27 +29,13 @@ function ProjectBoard() {
       <main className="flex gap-5 m-8 mt-20 h-1/3">
         {lanes.map((lane) => (
           <Lane
-            key={lane.id}
+            key={`lane_${lane.id}`}
             laneId={lane.id}
             status={lane.status}
             projectId={project.id}
             tasks={tasks.filter((task) => task.status === lane.status)}
           />
         ))}
-
-        {/* {isActive ? (
-          <div>
-            <AddTask setIsActive={setIsActive} />
-          </div>
-        ) : (
-          <button
-            onClick={() => setIsActive(!isActive)}
-            className="flex items-center justify-center gap-1 w-[99%] m-auto hover:bg-gray-300 rounded-[5px] py-2 mt-2"
-          >
-            <PlusIcon className="h-6 w-6 text-black-500" />
-            Create task
-          </button>
-        )} */}
       </main>
     </div>
   );

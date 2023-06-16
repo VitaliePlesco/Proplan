@@ -31,6 +31,7 @@ function AddTask({ setIsActive, status }) {
         projectId,
         id: nanoid(),
         title: task,
+        description: "",
         status: status,
       })
     );

@@ -1,12 +1,9 @@
-import { randomRgb } from "../../utils/randomRgb";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-const color = randomRgb();
-
 function ProjectCard({ projectId }) {
   const project = useSelector((state) =>
-    state.projects.find((project) => project.id == projectId)
+    state.projects.projects.find((project) => project.id == projectId)
   );
 
   return (
@@ -24,7 +21,7 @@ function ProjectCard({ projectId }) {
         <div className="flex  justify-between items-baseline text-gray-900 mt-6 ">
           <p className="text-sm">My open issues</p>
           <small className="px-3 bg-slate-300 rounded-xl ">
-            {project.todos.length}
+            {project.todos.length > 0 ? project.todos.length : 0}
           </small>
         </div>
       </div>
