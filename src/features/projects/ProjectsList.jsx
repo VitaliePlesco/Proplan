@@ -1,15 +1,25 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 import { selectAllProjects, fetchProjects } from "./projectsSlice";
 import ProjectCard from "./ProjectCard";
-import { useDispatch } from "react-redux";
-
 import { getProjectsStatus } from "./projectsSlice";
+
 import { useEffect } from "react";
+import { useAuth } from "../auth/auth";
 
 function ProjectsList() {
   const dispatch = useDispatch();
   const projects = useSelector(selectAllProjects);
   const projectsStatus = useSelector(getProjectsStatus);
+  const { authUser, isLoading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoading && !authUser) {
+      navigate("/");
+    }
+  }, [authUser, isLoading]);
 
   useEffect(() => {
     if (projectsStatus === "idle") {

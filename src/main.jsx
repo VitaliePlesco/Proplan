@@ -12,6 +12,7 @@ import AddProjectForm from "./features/projects/AddProjectForm";
 import "./index.css";
 import ProjectBoard from "./features/projects/ProjectBoard";
 import EditProjectForm from "./features/projects/EditProjectForm";
+import { AuthUserProvider } from "./features/auth/auth";
 
 const router = createBrowserRouter([
   {
@@ -51,7 +52,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <AuthUserProvider>
+        <RouterProvider router={router} />
+      </AuthUserProvider>
     </Provider>
   </React.StrictMode>
 );

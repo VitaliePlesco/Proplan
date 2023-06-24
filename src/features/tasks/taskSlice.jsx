@@ -1,4 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  doc,
+  setDoc,
+  deleteDoc,
+  addDoc,
+  getDocs,
+  collection,
+  updateDoc,
+} from "firebase/firestore";
+
+import { db } from "../auth/firebase-config";
+
+const projectsCollection = collection(db, "Projects");
 
 const initialState = {
   tasks: [],
@@ -6,13 +19,15 @@ const initialState = {
   error: null,
 };
 
+export const fetchTasks = createAsyncThunk("tasks/fetchTask", async () => {});
+
 const taskSlice = createSlice({
   name: "tasks",
   initialState,
   reducers: {},
-  extraReducers(builder) {
-    builder.addCase();
-  },
+  // extraReducers(builder) {
+  //   builder.addCase();
+  // },
 });
 
 export const taskAdded = taskSlice.actions;

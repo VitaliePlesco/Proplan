@@ -21,7 +21,8 @@ function ProjectCard({ projectId }) {
         <div className="flex  justify-between items-baseline text-gray-900 mt-6 ">
           <p className="text-sm">My open issues</p>
           <small className="px-3 bg-slate-300 rounded-xl ">
-            {project.todos.length > 0 ? project.todos.length : 0}
+            {/* {project.todos.length > 0 ? project.todos.length : 0} */}
+            {project?.todos?.length}
           </small>
         </div>
       </div>

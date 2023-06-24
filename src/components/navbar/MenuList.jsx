@@ -10,7 +10,7 @@ function MenuList() {
       </div>
       <div>
         <Link to={"addProject"}>
-          <span className="rounded-xl px-3 py-1 bg-[#4b50d6] text-white">
+          <span className="rounded-xl px-3 py-1 bg-[#4b50d6] hover:bg-[#6b70f0] text-white">
             Create
           </span>
         </Link>

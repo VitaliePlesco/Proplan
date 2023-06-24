@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 // authentication imports
 import { auth } from "./firebase-config";
+import { useAuth } from "./auth";
 import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
@@ -14,7 +15,33 @@ import {
 import googleSvg from "../../assets/img/google.svg";
 import facebookSvg from "../../assets/img/facebook.svg";
 
+// sign in with google
+const googleProvider = new GoogleAuthProvider(auth);
+export const googleLogin = async () => {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    console.log(result);
+    navigate("/projects");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// sign in with facebook
+const facebookProvider = new FacebookAuthProvider(auth);
+export const facebookLogin = async () => {
+  try {
+    const result = await signInWithPopup(auth, facebookProvider);
+    console.log(result);
+    navigate("/projects");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 function SignIn() {
+  const { authUser, isLoading } = useAuth();
+  const [errorMsg, setErrorMsg] = useState("");
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -26,40 +53,21 @@ function SignIn() {
   // sign in with email and password
   const emailPasswordLogin = async () => {
     try {
-      const result = await signInWithEmailAndPassword(
+      await signInWithEmailAndPassword(
         auth,
         credentials.email,
         credentials.password
       );
-      console.log(result);
     } catch (error) {
-      console.log(error);
+      setErrorMsg(error.message);
     }
   };
 
-  // sign in with google
-  const googleProvider = new GoogleAuthProvider(auth);
-  const googleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      console.log(result);
+  useEffect(() => {
+    if (!isLoading && authUser) {
       navigate("/projects");
-    } catch (error) {
-      console.log(error);
     }
-  };
-
-  // sign in with facebook
-  const facebookProvider = new FacebookAuthProvider(auth);
-  const facebookLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, facebookProvider);
-      console.log(result);
-      navigate("/projects");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  }, [authUser, isLoading]);
 
   useEffect(() => {
     emailRef.current.focus();
@@ -73,13 +81,17 @@ function SignIn() {
   }
 
   function handleSubmit(e) {
+    if (errorMsg) {
+      console.log(errorMsg, "if statement");
+      return;
+    }
     e.preventDefault();
     emailPasswordLogin();
     setCredentials({
       email: "",
       password: "",
     });
-    navigate("/projects");
+    // navigate("/projects");
   }
 
   return (
@@ -88,6 +100,11 @@ function SignIn() {
         <h3 className="text-center text-lg font-bold text-gray-700 mb-7 ">
           Log In
         </h3>
+        {errorMsg ? (
+          <small className="text-red-600 text-center bg-white p-2 mb-4">
+            Incorrect email address and / or password.
+          </small>
+        ) : null}
         <form onSubmit={handleSubmit}>
           <div className="input-field">
             <label
@@ -122,18 +139,7 @@ function SignIn() {
               onChange={handleChange}
             />
           </div>
-          <div className="input-field">
-            <label className="flex    cursor-pointer  items-start  ">
-              <input
-                type="checkbox"
-                id="checkLogin"
-                className="form-checkbox border-0 rounded  text-gray-800  w-5 h-4 mb-5"
-              />
-              <span className="ml-2 text-sm font-regular text-gray-700 ">
-                Remember me
-              </span>
-            </label>
-          </div>
+
           <div className="input-field">
             <button
               type="submit"

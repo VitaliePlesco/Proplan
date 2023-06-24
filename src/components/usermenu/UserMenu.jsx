@@ -1,23 +1,19 @@
 import { Link } from "react-router-dom";
 import { auth } from "../../features/auth/firebase-config";
 import { signOut } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "../../features/auth/auth";
 
 function Dropdown({ isOpen, setIsOpen }) {
-  const navigate = useNavigate();
+  const { signOut } = useAuth();
 
   function closeDropdown() {
     setIsOpen(!isOpen);
   }
 
   function userLogout() {
-    signOut(auth)
-      .then(() => {
-        console.log("sign out successeful");
-      })
-      .catch((error) => console.log(error));
+    signOut();
     closeDropdown();
-    navigate("/login");
   }
 
   return (

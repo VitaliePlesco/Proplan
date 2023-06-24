@@ -1,6 +1,7 @@
 import * as yup from "yup";
 
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const PWD_REGEX =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 export const signupSchema = yup.object().shape({
   email: yup.string().email("Please enter a valid email").required(),

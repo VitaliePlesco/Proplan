@@ -1,11 +1,12 @@
 import UserMenu from "../usermenu/UserMenu";
 import { useState, useRef, useEffect } from "react";
-import { auth } from "../../features/auth/firebase-config";
-import { onAuthStateChanged } from "firebase/auth";
+
+import { useAuth } from "../../features/auth/auth";
 
 function SignedInLinks() {
   const [isOpen, setIsOpen] = useState(false);
-  const [authUser, setAuthUser] = useState(null);
+  // const [authUser, setAuthUser] = useState(null);
+  const { authUser } = useAuth();
 
   const dropdownRef = useRef();
   function handleClick() {
@@ -28,20 +29,6 @@ function SignedInLinks() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownRef]);
-
-  useEffect(() => {
-    const listen = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setAuthUser(user);
-      } else {
-        console.log("User is loged out");
-        setAuthUser(null);
-      }
-    });
-    return () => {
-      listen();
-    };
-  }, []);
 
   return (
     <div ref={dropdownRef} className="relative ">

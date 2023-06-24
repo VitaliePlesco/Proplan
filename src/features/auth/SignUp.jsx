@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signupSchema } from "./validateSchema";
 import { useFormik } from "formik";
@@ -6,9 +6,20 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebase-config";
 import googleSvg from "../../assets/img/google.svg";
 import facebookSvg from "../../assets/img/facebook.svg";
+import { googleLogin, facebookLogin } from "./SignIn";
+import { useAuth } from "./auth";
 
 function SignUp() {
+  const [errorMessage, setErrorMessage] = useState(null);
+  const { authUser, isLoading } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoading && authUser) {
+      navigate("/projects");
+    }
+  }, [authUser, isLoading]);
+
   const {
     values,
     errors,
@@ -28,10 +39,13 @@ function SignUp() {
     onSubmit: (values) => {
       createUserWithEmailAndPassword(auth, values.email, values.password)
         .then((userCredentials) => {
-          console.log(userCredentials);
+          console.log(userCredentials, "new user");
         })
         .catch((error) => {
-          console.log(error);
+          const errorCode = error.code;
+          console.log(errorCode);
+          const errorMessage = error.message;
+          setErrorMessage(errorMessage);
         });
       resetForm();
       navigate("/");
@@ -57,6 +71,11 @@ function SignUp() {
           <h3 className="text-center text-lg font-bold text-gray-700 mb-7 ">
             Sign up
           </h3>
+          {errorMessage ? (
+            <small className="text-red-600 text-center bg-white p-2 mb-4">
+              {errorMessage}
+            </small>
+          ) : null}
           <form onSubmit={handleSubmit}>
             <div className="input-field">
               <label
@@ -67,6 +86,7 @@ function SignUp() {
               </label>
               <input
                 type="email"
+                id="email"
                 name="email"
                 placeholder="Email"
                 value={values.email}
@@ -75,6 +95,7 @@ function SignUp() {
                 style={{ transition: "all .15s ease" }}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                autoComplete="off"
               />
             </div>
             {touched.email && errors.email ? (
@@ -90,6 +111,7 @@ function SignUp() {
                 Password
               </label>
               <input
+                id="password"
                 type="password"
                 name="password"
                 className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full mb-0"
@@ -114,6 +136,7 @@ function SignUp() {
               </label>
               <input
                 type="password"
+                id="confirmPassword"
                 name="confirmPassword"
                 className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full mb-0"
                 placeholder="Confirm Password"
@@ -143,6 +166,7 @@ function SignUp() {
               className="min-w-full bg-white  active:bg-gray-100 text-gray-800 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-2  shadow hover:shadow-md flex items-center  text-bold text-center mt-5"
               type="button"
               style={{ transition: "all .15s ease" }}
+              onClick={facebookLogin}
             >
               <img alt="..." className="w-5 mr-1" src={facebookSvg} />
               <h6 className=" m-auto">Continue with Facebook</h6>
@@ -151,6 +175,7 @@ function SignUp() {
               className="min-w-full bg-white active:bg-gray-100 text-gray-800 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-2  shadow hover:shadow-md flex items-center "
               type="button"
               style={{ transition: "all .15s ease" }}
+              onClick={googleLogin}
             >
               <img alt="..." className="w-5 mr-1" src={googleSvg} />
               <h6 className=" m-auto">Continue with Google</h6>
