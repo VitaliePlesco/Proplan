@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { selectAllProjects, fetchProjects } from "./projectsSlice";
+import { selectAllProjects, getProjects } from "./projectsSlice";
 import ProjectCard from "./ProjectCard";
 import { getProjectsStatus } from "./projectsSlice";
 
@@ -15,21 +15,23 @@ function ProjectsList() {
   const { authUser, isLoading } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!isLoading && !authUser) {
-      navigate("/");
-    }
-  }, [authUser, isLoading]);
+  // useEffect(() => {
+  //   if (!isLoading && !authUser) {
+  //     navigate("/");
+  //   }
+  // }, [authUser, isLoading]);
 
   useEffect(() => {
     if (projectsStatus === "idle") {
-      dispatch(fetchProjects());
+      if (authUser) {
+        dispatch(getProjects({ uid: authUser.uid }));
+      }
     }
-  }, [projectsStatus, dispatch]);
+  }, [projectsStatus, dispatch, authUser]);
 
   return (
     <div>
-      {projects.length > 0 ? (
+      {projects?.length > 0 ? (
         <div className="flex flex-col">
           <h1 className="font-bold p-8 text-gray-800">Your work</h1>
           <section className="flex flex-col p-8 w-full bg-gray-100 ">

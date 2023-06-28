@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { ChevronUpIcon } from "@heroicons/react/24/outline";
 import { useDispatch } from "react-redux";
-import { todoStatusUpdated } from "../../../projects/projectsSlice";
+import { updateTask } from "../../taskSlice";
 
 const statusOptions = [
   {
@@ -22,8 +22,8 @@ const statusOptions = [
   },
 ];
 
-function TaskStatus({ projectId, taskId, taskStatus }) {
-  const [status, setStatus] = useState(taskStatus);
+function TaskStatus({ projectId, uid, task }) {
+  const [status, setStatus] = useState(task.status);
   const [isOpen, setIsOpen] = useState(false);
 
   const dispatch = useDispatch();
@@ -38,22 +38,28 @@ function TaskStatus({ projectId, taskId, taskStatus }) {
     (option) => option.name !== status
   );
 
-  const handleStatusChange = () => {
-    dispatch(
-      todoStatusUpdated({
-        projectId,
-        taskId,
-        status,
-      })
-    );
-  };
+  // const handleStatusChange = () => {
+  //   dispatch(
+  //     updateTask({
+  //       uid,
+  //       projectId,
+  //       id: task.id,
+  //       summary: task.summary,
+  //       description: task.description,
+  //       status,
+  //     })
+  //   );
+  // };
 
   useEffect(() => {
     const handleStatusChange = () => {
       dispatch(
-        todoStatusUpdated({
+        updateTask({
+          uid,
           projectId,
-          id: taskId,
+          id: task.id,
+          summary: task.summary,
+          description: task.description,
           status,
         })
       );
@@ -64,7 +70,7 @@ function TaskStatus({ projectId, taskId, taskStatus }) {
   return (
     <div className="relative flex flex-col items-start  ">
       <small className="text-lg pb-2 text-gray-500">Status</small>
-      <button onClick={handleShowMenu} className={displayBtn.style}>
+      <button onClick={handleShowMenu} className={displayBtn?.style}>
         {status}
         {isOpen ? (
           <ChevronUpIcon className="h-5 w-5 text-black-500 " />

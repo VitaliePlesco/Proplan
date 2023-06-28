@@ -2,19 +2,24 @@ import { XMarkIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Editor from "../../components/quillEditor/Editor";
 import TaskSummary from "./editTask/Summary/TaskSummary";
 import TaskStatus from "./editTask/Status/TaskStatus";
-import { todoDeleted } from "../projects/projectsSlice";
-
+import { deleteTask } from "./taskSlice";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { selectAllTasks } from "./taskSlice";
+
+import { useAuth } from "../auth/auth";
 
 function EditTaskDialog({ dialogRef, taskId }) {
   const dispatch = useDispatch();
+  const { authUser } = useAuth();
 
   const { projectId } = useParams();
   const project = useSelector((state) =>
     state.projects.projects.find((project) => project.id == projectId)
   );
-  const task = project.todos.find((task) => task.id === taskId);
+  const tasks = useSelector(selectAllTasks);
+  const task = tasks.find((task) => task.id === taskId);
+  console.log(task);
 
   const handleCloseEdit = () => {
     dialogRef.current.close();
@@ -28,7 +33,8 @@ function EditTaskDialog({ dialogRef, taskId }) {
 
   const handleDeleteTask = () => {
     dispatch(
-      todoDeleted({
+      deleteTask({
+        uid: authUser.uid,
         projectId,
         id: taskId,
       })
@@ -60,20 +66,12 @@ function EditTaskDialog({ dialogRef, taskId }) {
       </header>
       <div className="flex mt-4  gap-16 min-w-full ">
         <div className="flex flex-col justify-between  items-start gap-2 min-w-[70%]">
-          <TaskSummary taskId={task.id} title={task.title} />
+          <TaskSummary task={task} uid={authUser.uid} />
 
-          <Editor
-            projectId={project.id}
-            description={task.description}
-            taskId={task.id}
-          />
+          <Editor projectId={projectId} task={task} uid={authUser.uid} />
         </div>
 
-        <TaskStatus
-          projectId={projectId}
-          taskId={task.id}
-          taskStatus={task.status}
-        />
+        <TaskStatus projectId={projectId} task={task} uid={authUser.uid} />
       </div>
     </dialog>
   );

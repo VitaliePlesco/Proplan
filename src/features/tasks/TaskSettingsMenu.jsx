@@ -1,14 +1,15 @@
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { useDispatch } from "react-redux";
-import { todoDeleted } from "../projects/projectsSlice";
-
+import { deleteTask } from "./taskSlice";
 import { useRef, useState, useEffect } from "react";
 import EditTaskDialog from "./EditTaskDialog";
+import { useAuth } from "../auth/auth";
 
 function TaskSettingsMenu({ projectId, taskId }) {
   const [isOpen, setIsOpen] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
+  const { authUser } = useAuth();
 
   const dispatch = useDispatch();
 
@@ -23,11 +24,13 @@ function TaskSettingsMenu({ projectId, taskId }) {
 
   const handleDeleteTask = () => {
     dispatch(
-      todoDeleted({
+      deleteTask({
+        uid: authUser.uid,
         projectId,
         id: taskId,
       })
     );
+    dialogRef.current.close();
   };
 
   useEffect(() => {

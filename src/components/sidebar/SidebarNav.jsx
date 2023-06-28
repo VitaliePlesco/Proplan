@@ -12,10 +12,10 @@ function SidebarNav({ projectId }) {
 
   return (
     <aside className="min-h-full overflow-hidden flex flex-col border-r-[1px] border-gray-300 w-[240px] py-8 pl-4 pr-10 bg-gray-100">
-      <h2 className="text-center">{project.title}</h2>
+      <h2 className="text-center">{project?.title}</h2>
       <div className="py-8">
         <Link
-          to={`/editProject/${project.id}`}
+          to={`/editProject/${project?.id}`}
           className="flex gap-3 items-center py-2"
         >
           <Cog6ToothIcon className="h-6 w-6 text-black-500" />

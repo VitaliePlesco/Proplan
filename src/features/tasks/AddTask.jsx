@@ -2,11 +2,13 @@ import { useRef, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { nanoid } from "@reduxjs/toolkit";
 import { useParams } from "react-router-dom";
-import { todoAdded } from "../projects/projectsSlice";
+import { addTask } from "./taskSlice";
+import { useAuth } from "../auth/auth";
 
 function AddTask({ setIsActive, status }) {
   const [task, setTask] = useState("");
   const addTaskRef = useRef();
+  const { authUser } = useAuth();
 
   const { projectId } = useParams();
   const dispatch = useDispatch();
@@ -24,13 +26,14 @@ function AddTask({ setIsActive, status }) {
     };
   }, [addTaskRef]);
 
-  const handleClick = (e) => {
+  const handleAddTask = (e) => {
     e.preventDefault();
     dispatch(
-      todoAdded({
+      addTask({
+        uid: authUser.uid,
         projectId,
         id: nanoid(),
-        title: task,
+        summary: task,
         description: "",
         status: status,
       })
@@ -44,7 +47,7 @@ function AddTask({ setIsActive, status }) {
       ref={addTaskRef}
       className="flex justify-between  items-start w-[99%] m-auto bg-white rounded p-2 mt-2 gap-2 min-w-full shadow-md outline-none border-2 border-[#4b50d6] min-h-[120px]"
     >
-      <form onSubmit={handleClick} className="min-w-full">
+      <form onSubmit={handleAddTask} className="min-w-full">
         <textarea
           value={task}
           onChange={(e) => setTask(e.target.value)}

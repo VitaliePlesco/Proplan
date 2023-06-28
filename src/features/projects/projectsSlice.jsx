@@ -7,10 +7,11 @@ import {
   getDocs,
   collection,
   updateDoc,
+  query,
+  where,
+  arrayUnion,
 } from "firebase/firestore";
 import { db } from "../auth/firebase-config";
-
-const projectsCollection = collection(db, "Projects");
 
 const initialState = {
   projects: [],
@@ -18,39 +19,29 @@ const initialState = {
   error: null,
 };
 
-export const fetchProjects = createAsyncThunk(
-  "projects/fetchProjects",
-  async () => {
-    const response = await getDocs(projectsCollection);
-    const projects = [];
-
-    response.docs.map((doc) => {
-      projects.push({ ...doc.data() });
-    });
-
-    return projects;
-  }
-);
-
-export const addNewProject = createAsyncThunk(
-  "projects/addNewProject",
-  async (initialProject) => {
+export const getProjects = createAsyncThunk(
+  "projects/getProjects",
+  async ({ uid }) => {
+    let allProjects = [];
     try {
-      await addDoc(projectsCollection, initialProject);
-      console.log(initialProject.id);
-      return initialProject;
+      const querySnapshot = await getDocs(collection(db, uid));
+      querySnapshot.docs.map((doc) => {
+        allProjects.push({ ...doc.data(), id: doc.id });
+      });
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
+    return allProjects;
   }
 );
 
 export const setNewProject = createAsyncThunk(
   "projects/setNewProject",
   async (initialProject) => {
+    const { uid } = initialProject;
     try {
-      await setDoc(doc(db, "Projects", initialProject.id), initialProject);
-      console.log(initialProject.id);
+      await setDoc(doc(db, uid, initialProject.id), initialProject);
+
       return initialProject;
     } catch (error) {
       console.error(error);
@@ -61,11 +52,12 @@ export const setNewProject = createAsyncThunk(
 export const deleteProject = createAsyncThunk(
   "projects/deleteProject",
   async (initialProject) => {
-    const { id } = initialProject;
-    const projectDoc = doc(db, "Projects", id);
+    const { id, uid } = initialProject;
+
+    const projectDoc = doc(db, uid, id);
     try {
       await deleteDoc(projectDoc);
-      console.log(id, "delete thunk");
+
       return initialProject;
     } catch (error) {
       console.log(error);
@@ -76,8 +68,8 @@ export const deleteProject = createAsyncThunk(
 export const updateProject = createAsyncThunk(
   "projects/updateProject",
   async (initialProject) => {
-    const { id } = initialProject;
-    const projectDoc = doc(db, "Projects", id);
+    const { uid, id } = initialProject;
+    const projectDoc = doc(db, uid, id);
     try {
       await updateDoc(projectDoc, {
         title: initialProject.title,
@@ -95,61 +87,62 @@ const projectsSlice = createSlice({
   name: "projects",
   initialState,
   reducers: {
-    todoAdded(state, action) {
-      const { projectId, id, title, description, status } = action.payload;
-      const existingProject = state.projects.find(
-        (project) => project.id == projectId
-      );
-      console.log(existingProject, "added");
-      if (existingProject) {
-        existingProject.todos.push({
-          id,
-          title,
-          status,
-          description,
-        });
-      }
-    },
-    todoStatusUpdated(state, action) {
-      const { projectId, id, status } = action.payload;
-      const project = state.projects.find((project) => project.id == projectId);
-      const todo = project.todos.find((todo) => todo.id === id);
-      todo.status = status;
-    },
-    todoSummaryUpdated(state, action) {
-      const { projectId, id, summary } = action.payload;
-      const project = state.projects.find((project) => project.id == projectId);
-      const todo = project.todos.find((todo) => todo.id === id);
-      todo.title = summary;
-    },
-    todoDescriptionUpdated(state, action) {
-      const { projectId, id, value } = action.payload;
-      const project = state.projects.find((project) => project.id == projectId);
-      const todo = project.todos.find((todo) => todo.id === id);
-      todo.description = value;
-    },
-    todoDeleted(state, action) {
-      const { projectId, id } = action.payload;
-      const project = state.projects.find((project) => project.id == projectId);
-      const todos = project.todos.filter((todo) => todo.id !== id);
-      project.todos = todos;
-    },
+    // todoAdded(state, action) {
+    //   const { projectId, id, title, description, status } = action.payload;
+    //   const existingProject = state.projects.find(
+    //     (project) => project.id == projectId
+    //   );
+    //   console.log(existingProject, "added");
+    //   if (existingProject) {
+    //     existingProject.todos.push({
+    //       id,
+    //       title,
+    //       status,
+    //       description,
+    //     });
+    //   }
+    // },
+    // todoStatusUpdated(state, action) {
+    //   const { projectId, id, status } = action.payload;
+    //   const project = state.projects.find((project) => project.id == projectId);
+    //   const todo = project.todos.find((todo) => todo.id === id);
+    //   todo.status = status;
+    // },
+    // todoSummaryUpdated(state, action) {
+    //   const { projectId, id, summary } = action.payload;
+    //   const project = state.projects.find((project) => project.id == projectId);
+    //   const todo = project.todos.find((todo) => todo.id === id);
+    //   todo.title = summary;
+    // },
+    // todoDescriptionUpdated(state, action) {
+    //   const { projectId, id, value } = action.payload;
+    //   const project = state.projects.find((project) => project.id == projectId);
+    //   const todo = project.todos.find((todo) => todo.id === id);
+    //   todo.description = value;
+    // },
+    // todoDeleted(state, action) {
+    //   const { projectId, id } = action.payload;
+    //   const project = state.projects.find((project) => project.id == projectId);
+    //   const todos = project.todos.filter((todo) => todo.id !== id);
+    //   project.todos = todos;
+    // },
   },
   extraReducers(builder) {
     builder
-      .addCase(fetchProjects.pending, (state, action) => {
+      .addCase(getProjects.pending, (state, action) => {
         state.status = "loading";
       })
-      .addCase(fetchProjects.fulfilled, (state, action) => {
+      .addCase(getProjects.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.projects = action.payload;
       })
-      .addCase(fetchProjects.rejected, (state, action) => {
+      .addCase(getProjects.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(setNewProject.fulfilled, (state, action) => {
         state.projects.push(action.payload);
+        state.status = "idle";
       })
       .addCase(deleteProject.fulfilled, (state, action) => {
         if (!action.payload.id) {
@@ -160,6 +153,7 @@ const projectsSlice = createSlice({
         state.projects = state.projects.filter((project) => project.id != id);
       })
       .addCase(updateProject.fulfilled, (state, action) => {
+        state.status = "idle";
         if (!action.payload.id) {
           console.log("Could not update project");
           return;

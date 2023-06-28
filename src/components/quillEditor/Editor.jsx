@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "./editor.css";
-import { todoDescriptionUpdated } from "../../features/projects/projectsSlice";
+import { updateTask } from "../../features/tasks/taskSlice";
 import { useDispatch } from "react-redux";
 
-function Editor({ projectId, taskId, description }) {
-  const [value, setValue] = useState(description);
+function Editor({ projectId, task, uid }) {
+  const [description, setDescription] = useState(task.description);
   const [isEditMode, setIsEditMode] = useState(false);
 
   const dispatch = useDispatch();
@@ -17,10 +17,13 @@ function Editor({ projectId, taskId, description }) {
 
   const handleDescriptionChange = () => {
     dispatch(
-      todoDescriptionUpdated({
+      updateTask({
+        uid,
         projectId,
-        id: taskId,
-        value,
+        id: task.id,
+        summary: task.summary,
+        description,
+        status: task.status,
       })
     );
   };
@@ -52,14 +55,14 @@ function Editor({ projectId, taskId, description }) {
         <ReactQuill
           modules={module}
           theme="snow"
-          value={value}
-          onChange={setValue}
+          value={description}
+          onChange={setDescription}
         />
       ) : (
         <div
           onClick={handleToggleEdit}
           className="mb-3 p-2 w-full min-h-[90px] cursor-pointer hover:bg-gray-100 "
-          dangerouslySetInnerHTML={{ __html: value }}
+          dangerouslySetInnerHTML={{ __html: description }}
         />
       )}
       <div className="flex justify-end mt-4 gap-4">

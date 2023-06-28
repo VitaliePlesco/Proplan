@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addNewProject, setNewProject } from "./projectsSlice";
+import { setNewProject } from "./projectsSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { nanoid } from "@reduxjs/toolkit";
+import useAuth from "../auth/auth";
 
 const projectTypes = [
   { name: "Software" },
@@ -15,22 +17,30 @@ function AddProjectForm() {
   const [title, setTitle] = useState("");
   const [type, setProjectType] = useState("");
   const [addRequestStatus, setAddRequestStatus] = useState("idle");
+  const { authUser } = useAuth();
   console.log(title, type);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onTitleChanged = (e) => setTitle(e.target.value);
-  const onTypeChanged = (e) => setProjectType(e.target.value);
+  const handleTitleChange = (e) => setTitle(e.target.value);
+  const handleTypeChange = (e) => setProjectType(e.target.value);
 
   const canSave = [title, type].every(Boolean) && addRequestStatus === "idle";
 
-  const onCreateProjectClicked = (e) => {
+  const handleCreateProject = (e) => {
     e.preventDefault();
     if (canSave) {
       try {
         setAddRequestStatus("pending");
-        dispatch(setNewProject({ id: nanoid(), title, type, todos: [] }));
+        dispatch(
+          setNewProject({
+            uid: authUser.uid,
+            id: nanoid(),
+            title,
+            type,
+          })
+        );
         setTitle("");
         setProjectType("");
       } catch (error) {
@@ -38,6 +48,7 @@ function AddProjectForm() {
       } finally {
         setAddRequestStatus("idle");
       }
+      toast.success("Project successfully created");
       navigate("/projects");
     }
   };
@@ -59,7 +70,7 @@ function AddProjectForm() {
               id="projectName"
               value={title}
               maxLength="21"
-              onChange={onTitleChanged}
+              onChange={handleTitleChange}
               className="w-full rounded-md border border-gray-300 py-2 px-2 text-gray-900 shadow-sm  placeholder:text-gray-400  focus:outline-[#4b50d6] hover:border-[#8b8eee]"
             />
           </div>
@@ -73,7 +84,7 @@ function AddProjectForm() {
             <select
               id="projectType"
               className="w-full rounded-md border border-gray-300 py-2 px-2 text-gray-900 shadow-sm  placeholder:text-gray-400  focus:outline-[#4b50d6] hover:border-[#8b8eee]"
-              onChange={onTypeChanged}
+              onChange={handleTypeChange}
             >
               <option value=""></option>
               {projectTypes.map((option) => (
@@ -85,7 +96,7 @@ function AddProjectForm() {
           </div>
 
           <button
-            onClick={onCreateProjectClicked}
+            onClick={handleCreateProject}
             className="rounded-md bg-[#4b50d6] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#6b70f0] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-2"
           >
             Create Project

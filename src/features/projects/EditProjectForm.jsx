@@ -4,6 +4,7 @@ import { updateProject, deleteProject } from "./projectsSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import ProjectSettingsMenu from "../../components/projectSettings/ProjectSettingsMenu";
 import { toast } from "react-toastify";
+import { useAuth } from "../auth/auth";
 
 const projectTypes = [
   { name: "Software" },
@@ -17,6 +18,7 @@ function EditProjectForm() {
   const project = useSelector((state) =>
     state.projects.projects.find((project) => project.id == projectId)
   );
+  const { authUser } = useAuth();
 
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState(project.title);
@@ -33,17 +35,19 @@ function EditProjectForm() {
     if (title && type) {
       dispatch(
         updateProject({
+          uid: authUser.uid,
           id: projectId,
           title,
           type,
         })
       );
     }
+    toast.success("Project successfully updated");
     navigate(`/projects/${project.id}`);
   };
 
   const handleDeleteProject = () => {
-    dispatch(deleteProject(project));
+    dispatch(deleteProject({ id: project.id, uid: authUser.uid }));
     setTitle("");
     setProjectType("");
     toast.success("Project successfully moved to trash");

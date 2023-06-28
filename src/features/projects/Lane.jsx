@@ -10,7 +10,7 @@ function Lane({ projectId, status, tasks }) {
     <section className="w-[300px] rounded-[5px] p-2 bg-gray-100">
       <p className="mb-3 w-full border-b-2 text-gray-500 uppercase">{status}</p>
       <div className="flex flex-col gap-2">
-        {tasks.map((task) => (
+        {tasks?.map((task) => (
           <TaskPreview
             key={`${task.summary}_${task.id}`}
             projectId={projectId}
