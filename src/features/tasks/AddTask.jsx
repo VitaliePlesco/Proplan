@@ -26,20 +26,20 @@ function AddTask({ setIsActive, status }) {
     };
   }, [addTaskRef]);
 
-  const handleAddTask = (e) => {
-    e.preventDefault();
-    dispatch(
-      addTask({
-        uid: authUser.uid,
-        projectId,
-        id: nanoid(),
-        summary: task,
-        description: "",
-        status: status,
-      })
-    );
-
-    setIsActive(false);
+  const handleAddTask = (event) => {
+    if (event.key === "Enter" && task !== "") {
+      dispatch(
+        addTask({
+          uid: authUser.uid,
+          projectId,
+          id: nanoid(),
+          summary: task,
+          description: "",
+          status: status,
+        })
+      );
+      setIsActive(false);
+    }
   };
 
   return (
@@ -47,7 +47,7 @@ function AddTask({ setIsActive, status }) {
       ref={addTaskRef}
       className="flex justify-between  items-start w-[99%] m-auto bg-white rounded p-2 mt-2 gap-2 min-w-full shadow-md outline-none border-2 border-[#4b50d6] min-h-[120px]"
     >
-      <form onSubmit={handleAddTask} className="min-w-full">
+      <form className="min-w-full">
         <textarea
           value={task}
           onChange={(e) => setTask(e.target.value)}
@@ -55,13 +55,8 @@ function AddTask({ setIsActive, status }) {
           placeholder="What needs to be done?"
           rows="2"
           autoFocus
+          onKeyUp={handleAddTask}
         ></textarea>
-        <button
-          type="submit"
-          className="px-2 py-1 bg-green-500 text-white rounded-md"
-        >
-          submit
-        </button>
       </form>
     </div>
   );

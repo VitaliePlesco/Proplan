@@ -11,14 +11,14 @@ import {
 
 import { db } from "../auth/firebase-config";
 
-const initialState = {
+export const initialState = {
   tasks: [],
   status: "idle",
   error: null,
 };
 
 export const getTasks = createAsyncThunk(
-  "tasks/getTask",
+  "tasks/getTasks",
   async ({ uid, projectId }) => {
     let allTasks = [];
     console.log(allTasks);
@@ -98,7 +98,14 @@ export const updateTask = createAsyncThunk(
 const taskSlice = createSlice({
   name: "tasks",
   initialState,
-  reducers: {},
+  reducers: {
+    resetState(state, action) {
+      state.tasks = initialState;
+    },
+    resetStatus(state, action) {
+      state.status = "idle";
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(getTasks.pending, (state, action) => {
@@ -148,6 +155,6 @@ const taskSlice = createSlice({
 export const selectAllTasks = (state) => state.tasks.tasks;
 export const getTasksStatus = (state) => state.tasks.status;
 
-// export const taskAdded = taskSlice.actions;
+export const { resetState, resetStatus } = taskSlice.actions;
 
 export default taskSlice.reducer;

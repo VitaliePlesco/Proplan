@@ -19,8 +19,6 @@ function EditProjectForm() {
     state.projects.projects.find((project) => project.id == projectId)
   );
   const { authUser } = useAuth();
-
-  const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState(project.title);
   const [type, setProjectType] = useState(project.type);
 

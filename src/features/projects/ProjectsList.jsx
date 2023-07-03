@@ -1,6 +1,4 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-
 import { selectAllProjects, getProjects } from "./projectsSlice";
 import ProjectCard from "./ProjectCard";
 import { getProjectsStatus } from "./projectsSlice";
@@ -12,17 +10,10 @@ function ProjectsList() {
   const dispatch = useDispatch();
   const projects = useSelector(selectAllProjects);
   const projectsStatus = useSelector(getProjectsStatus);
-  const { authUser, isLoading } = useAuth();
-  const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (!isLoading && !authUser) {
-  //     navigate("/");
-  //   }
-  // }, [authUser, isLoading]);
+  const { authUser } = useAuth();
 
   useEffect(() => {
-    if (projectsStatus === "idle") {
+    if (projectsStatus === "idle" || projects.length === undefined) {
       if (authUser) {
         dispatch(getProjects({ uid: authUser.uid }));
       }
@@ -49,7 +40,15 @@ function ProjectsList() {
           </section>
         </div>
       ) : (
-        <p>loading</p>
+        <div className="flex flex-col">
+          <h1 className="font-bold p-8 text-gray-800">Your work</h1>
+          <section className="flex flex-col p-8 w-full bg-gray-100 ">
+            <h2 className="mb-4 text-gray-600">Recent projects</h2>
+            <div className="card flex flex-wrap max-w-6xl gap-5">
+              You have no projects. Start by creating one.
+            </div>
+          </section>
+        </div>
       )}
     </div>
   );

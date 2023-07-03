@@ -9,6 +9,7 @@ import { store } from "./app/store";
 import { Provider } from "react-redux";
 import ProjectsList from "./features/projects/ProjectsList";
 import AddProjectForm from "./features/projects/AddProjectForm";
+import SplashPage from "./components/splash/SplashPage";
 import "./index.css";
 import ProjectBoard from "./features/projects/ProjectBoard";
 import EditProjectForm from "./features/projects/EditProjectForm";
@@ -20,6 +21,11 @@ const router = createBrowserRouter([
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        index: true,
+        path: "/",
+        element: <SplashPage />,
+      },
       {
         index: true,
         path: "projects",

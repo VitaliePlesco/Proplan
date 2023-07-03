@@ -38,19 +38,6 @@ function TaskStatus({ projectId, uid, task }) {
     (option) => option.name !== status
   );
 
-  // const handleStatusChange = () => {
-  //   dispatch(
-  //     updateTask({
-  //       uid,
-  //       projectId,
-  //       id: task.id,
-  //       summary: task.summary,
-  //       description: task.description,
-  //       status,
-  //     })
-  //   );
-  // };
-
   useEffect(() => {
     const handleStatusChange = () => {
       dispatch(
@@ -87,7 +74,6 @@ function TaskStatus({ projectId, uid, task }) {
                 key={option.name}
                 onClick={() => {
                   setStatus(option.name);
-                  handleStatusChange();
                   handleShowMenu();
                 }}
                 className="my-2 py-1 px-4 font-normal  min-w-full hover:bg-gray-100 text-left"

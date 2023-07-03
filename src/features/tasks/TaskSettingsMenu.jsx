@@ -89,7 +89,7 @@ function TaskSettingsMenu({ projectId, taskId }) {
           </button>
         </div>
       ) : null}
-      <dialog ref={dialogRef}>
+      <dialog ref={dialogRef} className="shadow-lg">
         <div className="">
           <div className="flex flex-col justify-center mb-2 items-center">
             <ExclamationCircleIcon className="h-6 w-6 m-2 text-red-500 " />

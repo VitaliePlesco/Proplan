@@ -20,8 +20,6 @@ const googleProvider = new GoogleAuthProvider(auth);
 export const googleLogin = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
-    console.log(result);
-    navigate("/projects");
   } catch (error) {
     console.log(error);
   }
@@ -33,7 +31,6 @@ export const facebookLogin = async () => {
   try {
     const result = await signInWithPopup(auth, facebookProvider);
     console.log(result);
-    navigate("/projects");
   } catch (error) {
     console.log(error);
   }
@@ -50,6 +47,12 @@ function SignIn() {
   const emailRef = useRef();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!isLoading && authUser) {
+      navigate("/projects");
+    }
+  }, [authUser, isLoading]);
+
   // sign in with email and password
   const emailPasswordLogin = async () => {
     try {
@@ -62,12 +65,6 @@ function SignIn() {
       setErrorMsg(error.message);
     }
   };
-
-  useEffect(() => {
-    if (!isLoading && authUser) {
-      navigate("/projects");
-    }
-  }, [authUser, isLoading]);
 
   useEffect(() => {
     emailRef.current.focus();
@@ -91,7 +88,6 @@ function SignIn() {
       email: "",
       password: "",
     });
-    // navigate("/projects");
   }
 
   return (

@@ -3,13 +3,9 @@ import {
   doc,
   setDoc,
   deleteDoc,
-  addDoc,
   getDocs,
   collection,
   updateDoc,
-  query,
-  where,
-  arrayUnion,
 } from "firebase/firestore";
 import { db } from "../auth/firebase-config";
 
@@ -87,45 +83,9 @@ const projectsSlice = createSlice({
   name: "projects",
   initialState,
   reducers: {
-    // todoAdded(state, action) {
-    //   const { projectId, id, title, description, status } = action.payload;
-    //   const existingProject = state.projects.find(
-    //     (project) => project.id == projectId
-    //   );
-    //   console.log(existingProject, "added");
-    //   if (existingProject) {
-    //     existingProject.todos.push({
-    //       id,
-    //       title,
-    //       status,
-    //       description,
-    //     });
-    //   }
-    // },
-    // todoStatusUpdated(state, action) {
-    //   const { projectId, id, status } = action.payload;
-    //   const project = state.projects.find((project) => project.id == projectId);
-    //   const todo = project.todos.find((todo) => todo.id === id);
-    //   todo.status = status;
-    // },
-    // todoSummaryUpdated(state, action) {
-    //   const { projectId, id, summary } = action.payload;
-    //   const project = state.projects.find((project) => project.id == projectId);
-    //   const todo = project.todos.find((todo) => todo.id === id);
-    //   todo.title = summary;
-    // },
-    // todoDescriptionUpdated(state, action) {
-    //   const { projectId, id, value } = action.payload;
-    //   const project = state.projects.find((project) => project.id == projectId);
-    //   const todo = project.todos.find((todo) => todo.id === id);
-    //   todo.description = value;
-    // },
-    // todoDeleted(state, action) {
-    //   const { projectId, id } = action.payload;
-    //   const project = state.projects.find((project) => project.id == projectId);
-    //   const todos = project.todos.filter((todo) => todo.id !== id);
-    //   project.todos = todos;
-    // },
+    resetState(state, action) {
+      state.projects = initialState;
+    },
   },
   extraReducers(builder) {
     builder
@@ -171,13 +131,7 @@ const projectsSlice = createSlice({
   },
 });
 
-export const {
-  todoAdded,
-  todoStatusUpdated,
-  todoSummaryUpdated,
-  todoDescriptionUpdated,
-  todoDeleted,
-} = projectsSlice.actions;
+export const { resetState } = projectsSlice.actions;
 
 export const selectAllProjects = (state) => state.projects.projects;
 export const getProjectsStatus = (state) => state.projects.status;

@@ -1,18 +1,22 @@
 import { Link } from "react-router-dom";
-import { auth } from "../../features/auth/firebase-config";
-import { signOut } from "firebase/auth";
+import { resetState } from "../../features/projects/projectsSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../features/auth/auth";
 
 function Dropdown({ isOpen, setIsOpen }) {
   const { signOut } = useAuth();
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   function closeDropdown() {
     setIsOpen(!isOpen);
   }
 
   function userLogout() {
     signOut();
+    dispatch(resetState());
+    navigate("/");
     closeDropdown();
   }
 

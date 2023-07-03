@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectAllProjects } from "./projectsSlice";
+
 import { useParams } from "react-router-dom";
 import SidebarNav from "../../components/sidebar/SidebarNav";
-import { getTasksStatus, selectAllTasks } from "../tasks/taskSlice";
+import {
+  getTasksStatus,
+  selectAllTasks,
+  getTasks,
+  resetStatus,
+} from "../tasks/taskSlice";
 import { useAuth } from "../auth/auth";
-
 import Lane from "./Lane";
-import { getTasks } from "../tasks/taskSlice";
 
 const lanes = [
   { id: 1, status: "to do" },
@@ -17,28 +20,31 @@ const lanes = [
 
 function ProjectBoard() {
   const { projectId } = useParams();
+  const [id, setId] = useState(projectId);
   const dispatch = useDispatch();
-  const { authUser } = useAuth();
-  const projects = useSelector(selectAllProjects);
-  const taskStatus = useSelector(getTasksStatus);
+  const { authUser, isLoading } = useAuth();
+  const tasksStatus = useSelector(getTasksStatus);
+
   const tasks = useSelector(selectAllTasks);
 
   const project = useSelector((state) =>
     state.projects.projects.find((project) => project.id == projectId)
   );
+  console.log(projectId);
 
   useEffect(() => {
-    if (taskStatus === "idle" && projectId) {
+    dispatch(resetStatus());
+  }, [id]);
+
+  useEffect(() => {
+    if (tasksStatus === "idle") {
       if (authUser) {
         dispatch(getTasks({ uid: authUser.uid, projectId }));
       }
     }
-  }, [taskStatus, dispatch, authUser, projectId]);
+  }, [tasksStatus, dispatch, authUser, projectId]);
 
-  // console.log(project?.todos);
-  // const tasks = project?.todos;
-
-  return (
+  return !isLoading ? (
     <div className="flex min-h-full overflow-hidden">
       <SidebarNav projectId={projectId} projectName={project?.title} />
 
@@ -54,6 +60,8 @@ function ProjectBoard() {
         ))}
       </main>
     </div>
+  ) : (
+    <p>Loading...</p>
   );
 }
 

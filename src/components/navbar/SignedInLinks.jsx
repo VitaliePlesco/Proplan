@@ -5,7 +5,6 @@ import { useAuth } from "../../features/auth/auth";
 
 function SignedInLinks() {
   const [isOpen, setIsOpen] = useState(false);
-  // const [authUser, setAuthUser] = useState(null);
   const { authUser } = useAuth();
 
   const dropdownRef = useRef();
