@@ -52,12 +52,34 @@ function Editor({ projectId, task, uid }) {
     <div className="mb-3 w-full h-auto">
       <small className="text-lg p-2 pb-2 text-gray-500">Description</small>
       {isEditMode ? (
-        <ReactQuill
-          modules={module}
-          theme="snow"
-          value={description}
-          onChange={setDescription}
-        />
+        <>
+          <ReactQuill
+            modules={module}
+            theme="snow"
+            value={description}
+            onChange={setDescription}
+          />
+          <div className="flex justify-end mt-4 gap-4">
+            <button
+              onClick={() => {
+                setDescription("");
+                handleToggleEdit();
+              }}
+              className="hover:underline"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                handleDescriptionChange();
+                handleToggleEdit();
+              }}
+              className="px-3 py-1 bg-[#4b50d6] hover:bg-[#6b70f0] rounded text-white"
+            >
+              Save
+            </button>
+          </div>
+        </>
       ) : (
         <div
           onClick={handleToggleEdit}
@@ -65,20 +87,6 @@ function Editor({ projectId, task, uid }) {
           dangerouslySetInnerHTML={{ __html: description }}
         />
       )}
-      <div className="flex justify-end mt-4 gap-4">
-        <button onClick={handleToggleEdit} className="hover:underline">
-          Cancel
-        </button>
-        <button
-          onClick={() => {
-            handleDescriptionChange();
-            handleToggleEdit();
-          }}
-          className="px-3 py-1 bg-[#4b50d6] hover:bg-[#6b70f0] rounded text-white"
-        >
-          Save
-        </button>
-      </div>
     </div>
   );
 }
